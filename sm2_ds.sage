@@ -5,8 +5,8 @@ def test():
     (q, C, n, h, G) = sm2p256test   
     sk = Integer("128B2FA8 BD433C6C 068C8D80 3DFF7979 2A519A55 171B1B65 0C23661D 15897263", base=16) 
     pre_k = Integer("6CB28D99 385C175C 94F94E93 4817663F C176D925 DD72B727 260DBAAE 1FB2F96F", base=16)
-    a = Integer("787968B4 FA32C3FD 2417842E 73BBFEFF 2F3C848B 6831D7E0 EC65228B 3937E498", base=16),
-    b = Integer("63E4C6D3 B23B0C84 9CF84241 484BFE48 F61D59A5 B16BA06E 6E12D1DA 27C5249A", base=16),
+    a = Integer("787968B4 FA32C3FD 2417842E 73BBFEFF 2F3C848B 6831D7E0 EC65228B 3937E498", base=16)
+    b = Integer("63E4C6D3 B23B0C84 9CF84241 484BFE48 F61D59A5 B16BA06E 6E12D1DA 27C5249A", base=16)
     M = "message digest"
     IDA = "ALICE123@YAHOO.COM"
     ENTLA = [0x0, 0x0, 0x9, 0x0]
@@ -20,8 +20,8 @@ def test():
 
     ZA = ENTLA[:]
     ZA.extend(IDA)
-    ZA.extend(Integer_to_bytes(a, 256))
-    ZA.extend(Integer_to_bytes(b, 256))
+    ZA.extend( Integer_to_bytes(a, 256) )
+    ZA.extend( Integer_to_bytes(b, 256) )
     ZA.extend(xA_bytes)
     ZA.extend(yA_bytes)
     

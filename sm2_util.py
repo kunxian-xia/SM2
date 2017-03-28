@@ -7,9 +7,9 @@ from sage.functions.other import ceil, floor
 def hex_list(l):
     h = ""
     for b in l:
-        h = h + "%c%c" %( hex((b>>4) & 0xf), hex(b & 0xf) )
+        h = h + "%c%c" %( hex( (b>>4) & 0xf), hex(b & 0xf) )
     return h
-    
+
 def Integer_to_bytes(x, l):
     bs = []
     for i in range(l):
