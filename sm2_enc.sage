@@ -26,10 +26,10 @@ def is_list_of_zeros(l):
     return flag
 
 def hex_list(l):
-    hex = ""
+    h = ""
     for b in l:
-        hex = hex + "%c%c" %( hex(b & 0xf), hex((b>>4) & 0xf) )
-    return hex
+        h = h + "%c%c" %( hex(b & 0xf), hex((b>>4) & 0xf) )
+    return h
 
 #G: base point of order n, cofactor h over finite field Fq 
 #encrypt message using pk 
