@@ -1,6 +1,4 @@
-#clib ./sm3
-
-cdef extern from "sm3.h":
+cdef extern from "sm3.c":
     void sm3_hash(const unsigned char *data, size_t data_len, unsigned char digest[32])
 
 from libc.stdlib cimport malloc, free

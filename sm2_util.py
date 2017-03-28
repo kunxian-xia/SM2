@@ -1,12 +1,9 @@
 from sage.rings.finite_rings.finite_field_constructor import GF
 from sage.schemes.elliptic_curves.constructor import EllipticCurve
 from sage.rings.integer import Integer
-from sage.misc.functional import log_b
+from sage.misc.functional import log
 from sage.functions.other import ceil, floor
-import pyximport 
-pyximport.install()
 
-from sm3 import sm3_hash_sage
 # s is a bit string 
 
 
@@ -27,7 +24,7 @@ def bytes_to_Integer(bs):
 
 def field_to_bytes(alpha, q):
     if q & 0x1 == 1:
-        t = ceil(log_b(q, 2))
+        t = ceil(log(q, 2))
         l = ceil(t/8)
         return Integer_to_bytes(alpha.lift(), l)
 def bytes_to_field(bs, q):
@@ -36,20 +33,6 @@ def bytes_to_field(bs, q):
     
 def bytes(i):
     return Integer_to_bytes(i, 4)
-
-def kdf(Z, klen):
-    n = floor(klen/256)
-    K = []
-    for i in range(1, n+1):
-        t = Z[:]
-        t.extend(bytes(i))
-        K.extend( sm3_hash_sage(t) )
-    if (klen%256 == 0):
-        return K
-    else:
-        t = Z[:]
-        t.extend(bytes(n+1))
-        return K.extend(sm3_hash_sage(t)[: (klen - n*256)/8])
 
 def EC_group_new(p, a_bin, b_bin, xG_bin, yG_bin, h):
     F = GF(p)

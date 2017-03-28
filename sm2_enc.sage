@@ -1,13 +1,8 @@
 from sm2_util import *
 from sage.rings.integer import Integer
 from sage.misc.prandom import random
-import pyximport 
 
-pyximport.install()
-
-from sm3 import sm3_hash_sage
-
-if __name__ == "__main__":
+def test():
     (C, n, h, G) = sm2p256test
     q = 256
     M = "encryption standard"
@@ -26,6 +21,20 @@ if __name__ == "__main__":
     cc = sm2_do_enc(G, n, h, q, pk, M, len(M)*8, True, pre_k)
     print "".join([hex(c) for c in cc]) == ciphertext
 
+def kdf(Z, klen):
+    n = floor(klen/256)
+    K = []
+    for i in range(1, n+1):
+        t = Z[:]
+        t.extend(bytes(i))
+        K.extend( sm3_hash_sage(t) )
+    if (klen%256 == 0):
+        return K
+    else:
+        t = Z[:]
+        t.extend(bytes(n+1))
+        return K.extend(sm3_hash_sage(t)[: (klen - n*256)/8])
+        
 def is_list_of_zeros(l):
     flag = True
     for e in l:
