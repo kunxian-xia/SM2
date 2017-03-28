@@ -4,13 +4,10 @@ from sage.rings.integer import Integer
 from sage.misc.functional import log
 from sage.functions.other import ceil, floor
 
-# s is a bit string 
-
-
 def Integer_to_bytes(x, l):
     bs = []
     for i in range(l):
-        bs.append(x & 0xff)
+        bs.insert(0, x & 0xff)
         x = x >> 8
     return bs
 def bytes_to_Integer(bs):
@@ -38,14 +35,13 @@ def EC_group_new(p, a_bin, b_bin, xG_bin, yG_bin, h):
     F = GF(p)
     a, b = F(a_bin), F(b_bin)
     C = EllipticCurve(F, [a,b])
-    #print "the curve we are using is %s" %C
 
     # create base point
     xG, yG = F(xG_bin), F(yG_bin)
     G = C(xG, yG)
     n = G.order()
-    #print "the base point we are using has order %s" %n
-    return (C, n, h, G)
+
+    return (p, C, n, h,  G)
 
 # curves recommended by SM2 Standard
 # sm2p192test, sm2p256test, sm2b193test, sm2b257test
