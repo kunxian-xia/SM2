@@ -1,18 +1,41 @@
 from sage.rings.finite_rings.finite_field_constructor import GF
 from sage.schemes.elliptic_curves.constructor import EllipticCurve
 from sage.rings.integer import Integer
+from sage.misc.functional import log_b
+from sage.functions.other import ceil, floor
 import pyximport 
 pyximport.install()
 
 from sm3 import sm3_hash_sage
 # s is a bit string 
 
+
+def Integer_to_bytes(x, l):
+    bs = []
+    for i in range(l):
+        bs.append(x & 0xff)
+        x = x >> 8
+    return bs
+def bytes_to_Integer(bs):
+    x = 0
+    for b in bs:
+        x = x << 8
+        x = x+b
+    return x
+
+#def bits_to_bytes(bits):
+
+def field_to_bytes(alpha, q):
+    if q & 0x1 == 1:
+        t = ceil(log_b(q, 2))
+        l = ceil(t/8)
+        return Integer_to_bytes(alpha.lift(), l)
+def bytes_to_field(bs, q):
+    if q & 0x1 == 1:
+        return GF(q)(bytes_to_Integer(bs))
+    
 def bytes(i):
-    i0 = i & 0xff
-    i1 = (i >> 8) & 0xff
-    i2 = (i >> 16) & 0xff
-    i3 = (i >> 24) & 0xff
-    return [i3, i2, i1, i0]
+    return Integer_to_bytes(i, 4)
 
 def kdf(Z, klen):
     n = floor(klen/256)

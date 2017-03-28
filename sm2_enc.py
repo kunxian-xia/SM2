@@ -1,6 +1,5 @@
-from sm2_util import sm2p256v1, sm2p256test, sm2p192test, kdf
-from sage.misc.functional import log_b
-from sage.functions.other import ceil, floor
+from sm2_util import *
+from sage.rings.integer import Integer
 from sage.misc.prandom import random
 import pyximport 
 
@@ -9,17 +8,23 @@ pyximport.install()
 from sm3 import sm3_hash_sage
 
 if __name__ == "__main__":
-    (C, n, h, G) = sm2p192test
+    (C, n, h, G) = sm2p256test
+    q = 256
+    M = "encryption standard"
+    M = [ord(c) for c in M]
 
-#a \in F_q (q is a odd prime)
-def bytes(a, q):
-    t = ceil(log_b(q, 2))
-    l = ceil(t/8)
-    bs = []
-    for i in range(l):
-        bs.append(a & 0xff)
-        a = a >> 8
-    return bs
+    print "the message in hex: %s" % "".join([hex(c) for c in M])
+    sk = Integer("1649AB77A00637BD5E2EFE283FBF353534AA7F7CB89463F208DDBC2920BB0DA0", base=16)
+    pk = sk*G
+    pre_k = Integer("4C62EEFD6ECFC2B95B92FD6C3D9575148AFA17425546D49018E5388D49DD7B4F", base=16)
+
+    ciphertext = (
+        "245C26FB68B1DDDDB12C4B6BF9F2B6D5FE60A383B0D18D1C4144ABF17F6252E7"
+        "76CB9264C2A7E88E52B19903FDC47378F605E36811F5C07423A24B84400F01B8"
+        "650053A89B41C418B0C3AAD00D886C00286467"
+		"9C3D7360C30156FAB7C80A0276712DA9D8094A634B766D3A285E07480653426D")
+    cc = sm2_do_enc(G, n, h, q, pk, M, len(M)*8, True, pre_k)
+    print "".join([hex(c) for c in cc]) == ciphertext
 
 def is_list_of_zeros(l):
     flag = True
@@ -41,7 +46,9 @@ def sm2_do_enc(G, n, h, q, pk, M, klen, determ, predefined_k):
             k = predefined_k
         C1 = k*G
         (x1, y1) = C1.xy()
-
+        C1 = []
+        C1.extend(field_to_bytes(x1, q)).extend(field_to_bytes(y1, q))
+        
         S = h*pk
         if S == 0*G:
             """
@@ -50,8 +57,8 @@ def sm2_do_enc(G, n, h, q, pk, M, klen, determ, predefined_k):
         
         (x2, y2) = (k*pk).xy()
 
-        x2_bytes = bytes(x2, q)
-        y2_bytes = bytes(y2, q)
+        x2_bytes = field_to_bytes(x2, q)
+        y2_bytes = field_to_bytes(y2, q)
         x2y2 = []
         x2y2.extend(x2_bytes)
         x2y2.extend(y2_bytes)
@@ -64,5 +71,5 @@ def sm2_do_enc(G, n, h, q, pk, M, klen, determ, predefined_k):
     C2 = [ M[i].__xor__(t[i]) for i in range(len(M)) ]
     C3 = sm3_hash_sage(x2_bytes.extend(M).extend(y2_bytes))
 
-    return (C1, C3, C2)
+    return C1.extend(C3).extend(C2)
 
