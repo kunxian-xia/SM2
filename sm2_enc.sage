@@ -28,7 +28,7 @@ def is_list_of_zeros(l):
 def hex_list(l):
     h = ""
     for b in l:
-        h = h + "%c%c" %( hex(b & 0xf), hex((b>>4) & 0xf) )
+        h = h + "%c%c" %( hex((b>>4) & 0xf), hex(b & 0xf) )
     return h
 
 #G: base point of order n, cofactor h over finite field Fq 
@@ -79,7 +79,7 @@ def sm2_do_enc(G, n, h, q, pk, M, klen, determ, predefined_k):
     x2_bytes.extend(M)
     x2_bytes.extend(y2_bytes)
     C3 = sm3_hash_sage(x2_bytes)
-    
+
     print "C2 is %s \n C3 is %s" %( hex_list(C2), hex_list(C3) )
     
     C1.extend(C3)
@@ -100,7 +100,7 @@ def test():
                             "86902B8CF2FD87536E55EF7603B09E7C610567DBD4854F51F4F00ADCC01CFE90"
                           ))]
     for (curve, pre_k, sk, ciphertext) in data:
-        (q, C, n, h, G) = sm2p256test
+        (q, C, n, h, G) = curve
         M = "encryption standard"
         M = [ord(c) for c in M]
 
