@@ -24,8 +24,9 @@ def test():
     ZA.extend( Integer_to_bytes(b, 256) )
     ZA.extend(xA_bytes)
     ZA.extend(yA_bytes)
+    ZA = sm3_hash_sage(ZA)
     
-
+    print "ZA: %s" %( hex_list(ZA) )
     (r,s) = sm2_sign(G, n, sk, M, ZA, True, pre_k)
     is_valid = sm2_verify(G, n, pk, M, ZA, r, s)
 
