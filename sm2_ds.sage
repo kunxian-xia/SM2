@@ -15,18 +15,23 @@ def test():
     IDA = [ord(c) for c in IDA]
     pk = sk * G
     xA, yA = pk.xy()
+    xG, yG = G.xy()
     xA_bytes = field_to_bytes(xA, q)
     yA_bytes = field_to_bytes(yA, q)
+    xG_bytes = field_to_bytes(xG, q)
+    yG_bytes = field_to_bytes(yG, q)
 
     ZA = ENTLA[:]
     ZA.extend(IDA)
     ZA.extend( Integer_to_bytes(a, 256) )
     ZA.extend( Integer_to_bytes(b, 256) )
+    ZA.extend( xG_bytes )
+    ZA.extend( yG_bytes )
     ZA.extend(xA_bytes)
     ZA.extend(yA_bytes)
     ZA = sm3_hash_sage(ZA)
-    
-    print "ZA: %s" %( hex_list(ZA) )
+
+    print "\n ZA: %s" %( hex_list(ZA) )
     (r,s) = sm2_sign(G, n, sk, M, ZA, True, pre_k)
     is_valid = sm2_verify(G, n, pk, M, ZA, r, s)
 
