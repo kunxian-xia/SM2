@@ -42,15 +42,15 @@ def sm2_do_enc(G, n, h, q, pk, M, klen, determ, predefined_k):
             continue
         if determ:
             k = predefined_k
-        
-        C1 = k*G
-        (x1, y1) = C1.xy()
+
+        (x1, y1) = (k*G).xy()
         x1_bytes = field_to_bytes(x1, q)
         y1_bytes = field_to_bytes(y1, q)
 
-        x1y1 = []
-        x1y1.extend(x1_bytes)
-        x1y1.extend(y1_bytes)
+        # x1 || y1
+        C1 = []
+        C1.extend(x1_bytes)
+        C1.extend(y1_bytes)
         
         S = h*pk
         if S == 0*G:
@@ -59,6 +59,7 @@ def sm2_do_enc(G, n, h, q, pk, M, klen, determ, predefined_k):
         (x2, y2) = (k*pk).xy()
         x2_bytes = field_to_bytes(x2, q)
         y2_bytes = field_to_bytes(y2, q)
+        #x2 || y2
         x2y2 = []
         x2y2.extend(x2_bytes)
         x2y2.extend(y2_bytes)
@@ -71,10 +72,14 @@ def sm2_do_enc(G, n, h, q, pk, M, klen, determ, predefined_k):
         print "t: %s" %(hex_list(t))
 
     	break
+    #M xor t
     C2 = [ M[i].__xor__(t[i]) for i in range(len(M)) ]
+
+    # C3 = Hash(x2 || M || y2)
     x2_bytes.extend(M)
     x2_bytes.extend(y2_bytes)
     C3 = sm3_hash_sage(x2_bytes)
+    
     print "C2 is %s \n C3 is %s" %( hex_list(C2), hex_list(C3) )
     
     C1.extend(C3)
