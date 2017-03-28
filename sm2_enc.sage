@@ -85,7 +85,7 @@ def sm2_do_enc(G, n, h, q, pk, M, klen, determ, predefined_k):
     CC.extend(C3)
     CC.extend(C2)
     print "C2 is %s \n C3 is %s\n ciphertext is %s\n" %( hex_list(C2), hex_list(C3), hex_list(CC))
-    
+
     return CC
 
 def test():
@@ -115,4 +115,4 @@ def test():
     
     
         cc = sm2_do_enc(G, n, h, q, pk, M, len(M)*8, True, pre_k)
-        print hex_list(cc) == ciphertext
+        print hex_list(cc).upper() == ciphertext
