@@ -25,12 +25,6 @@ def is_list_of_zeros(l):
             break
     return flag
 
-def hex_list(l):
-    h = ""
-    for b in l:
-        h = h + "%c%c" %( hex((b>>4) & 0xf), hex(b & 0xf) )
-    return h
-
 #G: base point of order n, cofactor h over finite field Fq 
 #encrypt message using pk 
 #message is a list of byte
