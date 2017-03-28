@@ -79,12 +79,14 @@ def sm2_do_enc(G, n, h, q, pk, M, klen, determ, predefined_k):
     x2_bytes.extend(M)
     x2_bytes.extend(y2_bytes)
     C3 = sm3_hash_sage(x2_bytes)
-
-    print "C2 is %s \n C3 is %s" %( hex_list(C2), hex_list(C3) )
     
-    C1.extend(C3)
-    C1.extend(C2)
-    return C1
+    CC = []
+    CC.extend(C1)
+    CC.extend(C3)
+    CC.extend(C2)
+    print "C2 is %s \n C3 is %s\n ciphertext is %s\n" %( hex_list(C2), hex_list(C3), hex_list(CC))
+    
+    return CC
 
 def test():
     data = [(sm2p256test, Integer("4C62EEFD6ECFC2B95B92FD6C3D9575148AFA17425546D49018E5388D49DD7B4F", base=16),
