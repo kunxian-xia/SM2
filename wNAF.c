@@ -1,5 +1,3 @@
-#include <stdio.h>
-
 
 /*
  * 原理介绍：
